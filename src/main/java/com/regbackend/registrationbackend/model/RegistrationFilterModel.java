@@ -12,26 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegistrationResponse {
-
+public class RegistrationFilterModel {
     private List<RegistrationEntity> registrations;
-
     private int pageNumber;
     private int totalPages;
     private long totalRegistrations;
-
-    private long totalWorkshopRegistrations;
-    private long totalConferenceRegistrations;
-
-    private long pendingCount;
-    private long rejectedCount;
-    private long approvedCount;
-    private long attendedCount;
-
-    private long professionalCount;
-    private long studentCount;
-
-    private long maleCount;
-    private long femaleCount;
 }
 

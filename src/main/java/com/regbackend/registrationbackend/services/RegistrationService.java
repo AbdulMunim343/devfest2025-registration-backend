@@ -2,6 +2,7 @@ package com.regbackend.registrationbackend.services;
 
 import com.regbackend.registrationbackend.model.RegistrationModel;
 import com.regbackend.registrationbackend.entity.RegistrationEntity;
+import com.regbackend.registrationbackend.model.RegistrationStatsModel;
 
 import java.util.List;
 
@@ -20,5 +21,6 @@ public interface RegistrationService {
     );
     RegistrationEntity getRegistrationById(Long id);
     RegistrationEntity updateRegistration(Long id, RegistrationModel registrationModel);
+    RegistrationStatsModel getRegistrationStats();
     void deleteRegistration(Long id);
 }

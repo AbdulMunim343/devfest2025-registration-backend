@@ -24,4 +24,12 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
     List<RegistrationEntity> findByRegisteredAs(String registeredAs);
 
     List<RegistrationEntity> findByFullNameContainingIgnoreCase(String fullName);
+
+    long countByEventType(EventType eventType);
+
+    long countByStatus(Status status);
+
+    long countByRegisteredAs(String registeredAs);
+
+    long countByGender(String gender);
 }

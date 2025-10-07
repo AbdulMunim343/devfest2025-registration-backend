@@ -4,7 +4,8 @@ import com.regbackend.registrationbackend.entity.RegistrationEntity;
 import com.regbackend.registrationbackend.enums.EventType;
 import com.regbackend.registrationbackend.enums.Status;
 import com.regbackend.registrationbackend.model.RegistrationModel;
-import com.regbackend.registrationbackend.model.RegistrationResponse;
+import com.regbackend.registrationbackend.model.RegistrationFilterModel;
+import com.regbackend.registrationbackend.model.RegistrationStatsModel;
 import com.regbackend.registrationbackend.repository.RegistrationRepository;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,22 +141,35 @@ public class RegistrationServiceImp implements RegistrationService {
                 .count();
 
         // 🧾 Build Response
-        return RegistrationResponse.builder()
+        return RegistrationFilterModel.builder()
                 .registrations(page.getContent())
                 .pageNumber(page.getNumber())
                 .totalPages(page.getTotalPages())
                 .totalRegistrations(totalRegistrations)
-                .totalWorkshopRegistrations(totalWorkshop)
-                .totalConferenceRegistrations(totalConference)
-                .pendingCount(pending)
-                .approvedCount(approved)
-                .rejectedCount(rejected)
-                .attendedCount(attended)
-                .professionalCount(professional)
-                .studentCount(student)
-                .maleCount(male)
-                .femaleCount(female)
                 .build().getRegistrations();
+    }
+
+
+    @Override
+    public RegistrationStatsModel getRegistrationStats() {
+        RegistrationStatsModel stats = new RegistrationStatsModel();
+
+        stats.setTotalRegistrations(registrationRepository.count());
+        stats.setTotalWorkshopRegistrations(registrationRepository.countByEventType(EventType.WORKSHOP));
+        stats.setTotalConferenceRegistrations(registrationRepository.countByEventType(EventType.CONFERENCE));
+
+        stats.setPendingRegistrations(registrationRepository.countByStatus(Status.PENDING));
+        stats.setRejectedRegistrations(registrationRepository.countByStatus(Status.REJECTED));
+        stats.setApprovedRegistrations(registrationRepository.countByStatus(Status.APPROVED));
+        stats.setAttendedRegistrations(registrationRepository.countByStatus(Status.ATTENDED));
+
+        stats.setProfessionalCount(registrationRepository.countByRegisteredAs("professional"));
+        stats.setStudentCount(registrationRepository.countByRegisteredAs("student"));
+
+        stats.setMaleCount(registrationRepository.countByGender("male"));
+        stats.setFemaleCount(registrationRepository.countByGender("female"));
+
+        return stats;
     }
 }
 
