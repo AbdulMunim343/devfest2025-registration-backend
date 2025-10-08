@@ -1,7 +1,10 @@
 package com.regbackend.registrationbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
@@ -20,5 +23,6 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String password;
-}
 
+    private String role = "USER"; // default role
+}
