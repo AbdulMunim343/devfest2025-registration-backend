@@ -33,9 +33,14 @@ public class RegistrationModel {
 
     private EventType eventType;
 
-    private String workshopName; // only if eventType = WORKSHOP
+    // 🔹 Match JSON key "selectedWorkshop"
+    private String selectedWorkshop; // previously workshopName
+
+    private String gender; // 🔹 Added (was null in DB)
 
     private Status status;
+
+    private String reason; // 🔹 Added (was null in DB)
 
     private String createdAt;
 }
