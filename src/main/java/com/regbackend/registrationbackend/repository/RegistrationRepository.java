@@ -32,4 +32,8 @@ public interface RegistrationRepository extends JpaRepository<RegistrationEntity
     long countByRegisteredAs(String registeredAs);
 
     long countByGender(String gender);
+
+    boolean existsByCnic(String cnic);
+
+    boolean existsByEmail(String email);
 }

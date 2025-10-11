@@ -19,23 +19,35 @@ public class RegistrationServiceImp implements RegistrationService {
     private RegistrationRepository registrationRepository;
 
     @Override
-    public RegistrationEntity registerUser(RegistrationModel model) {
-        RegistrationEntity entity = new RegistrationEntity();
+    public RegistrationEntity registerUser(RegistrationModel registrationModel) {
 
-        // ✅ Map all form fields manually
-        entity.setFullName(model.getFullName());
-        entity.setEmail(model.getEmail());
-        entity.setCnic(model.getCnic());
-        entity.setRegisteredAs(model.getRegisteredAs());
-        entity.setJobRole(model.getJobRole());
-        entity.setPhoneNumber(model.getPhoneNumber());
-        entity.setOrganizationOrUniversity(model.getOrganizationOrUniversity());
-        entity.setLinkedInProfile(model.getLinkedInProfile());
-        entity.setGender(model.getGender());
-        entity.setEventType(model.getEventType());
-        entity.setWorkshopName(model.getSelectedWorkshop()); // ✅ map selectedWorkshop → workshopName
-        entity.setStatus(Status.PENDING); // default status
-        entity.setCreatedAt(LocalDateTime.now());
+        // ✅ Check for duplicate CNIC
+        if (registrationRepository.existsByCnic(registrationModel.getCnic())) {
+            throw new IllegalArgumentException("CNIC already exists. Please use a different CNIC.");
+        }
+
+        // ✅ Check for duplicate Email
+        if (registrationRepository.existsByEmail(registrationModel.getEmail())) {
+            throw new IllegalArgumentException("Email already exists. Please use a different email.");
+        }
+
+        // ✅ Build and save new entity
+        RegistrationEntity entity = RegistrationEntity.builder()
+                .fullName(registrationModel.getFullName())
+                .email(registrationModel.getEmail())
+                .cnic(registrationModel.getCnic())
+                .registeredAs(registrationModel.getRegisteredAs())
+                .jobRole(registrationModel.getJobRole())
+                .phoneNumber(registrationModel.getPhoneNumber())
+                .organizationOrUniversity(registrationModel.getOrganizationOrUniversity())
+                .linkedInProfile(registrationModel.getLinkedInProfile())
+                .eventType(registrationModel.getEventType())
+                .workshopName(registrationModel.getSelectedWorkshop())
+                .status(Status.PENDING)
+                .gender(registrationModel.getGender())
+                .reason(registrationModel.getReason())
+                .createdAt(LocalDateTime.now())
+                .build();
 
         return registrationRepository.save(entity);
     }

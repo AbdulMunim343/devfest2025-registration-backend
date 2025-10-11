@@ -23,9 +23,17 @@ public class RegistrationController {
     // ✅ Register a new user
     @PostMapping("/register")
     public ResponseEntity<APIModel<RegistrationEntity>> registerUser(@Valid @RequestBody RegistrationModel registrationModel) {
-        RegistrationEntity saved = registrationService.registerUser(registrationModel);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new APIModel<>(201, "User registered successfully", saved));
+        try {
+            RegistrationEntity saved = registrationService.registerUser(registrationModel);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new APIModel<>(201, "User registered successfully", saved));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new APIModel<>(400, ex.getMessage(), null));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new APIModel<>(500, "An unexpected error occurred: " + ex.getMessage(), null));
+        }
     }
 
     // ✅ Get all registrations
