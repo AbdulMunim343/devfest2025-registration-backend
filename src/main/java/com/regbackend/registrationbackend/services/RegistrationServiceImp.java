@@ -89,7 +89,24 @@ public class RegistrationServiceImp implements RegistrationService {
 
     @Override
     public RegistrationStatsModel getRegistrationStats() {
-        return null;
+        RegistrationStatsModel stats = new RegistrationStatsModel();
+
+        stats.setTotalRegistrations(registrationRepository.count());
+        stats.setTotalWorkshopRegistrations(registrationRepository.countByEventType(EventType.WORKSHOP));
+        stats.setTotalConferenceRegistrations(registrationRepository.countByEventType(EventType.CONFERENCE));
+
+        stats.setPendingRegistrations(registrationRepository.countByStatus(Status.PENDING));
+        stats.setRejectedRegistrations(registrationRepository.countByStatus(Status.REJECTED));
+        stats.setApprovedRegistrations(registrationRepository.countByStatus(Status.APPROVED));
+        stats.setAttendedRegistrations(registrationRepository.countByStatus(Status.ATTENDED));
+
+        stats.setProfessionalCount(registrationRepository.countByRegisteredAs("professional"));
+        stats.setStudentCount(registrationRepository.countByRegisteredAs("student"));
+
+        stats.setMaleCount(registrationRepository.countByGender("male"));
+        stats.setFemaleCount(registrationRepository.countByGender("female"));
+
+        return stats;
     }
 
     @Override
