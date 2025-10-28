@@ -1,5 +1,6 @@
 package com.regbackend.registrationbackend.services;
 
+import com.regbackend.registrationbackend.model.RegistrationFilterModel;
 import com.regbackend.registrationbackend.model.RegistrationModel;
 import com.regbackend.registrationbackend.entity.RegistrationEntity;
 import com.regbackend.registrationbackend.model.RegistrationStatsModel;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface RegistrationService {
     RegistrationEntity registerUser(RegistrationModel registrationModel);
     List<RegistrationEntity> getAllRegistrations();
-    List<RegistrationEntity> getByFilters(
+    RegistrationFilterModel getByFilters(
             String status,
             String name,
             String eventType,
@@ -19,6 +20,7 @@ public interface RegistrationService {
             int pageNumber,
             int pageSize
     );
+
     RegistrationEntity getRegistrationById(Long id);
     RegistrationEntity updateRegistration(Long id, RegistrationModel registrationModel);
     RegistrationStatsModel getRegistrationStats();

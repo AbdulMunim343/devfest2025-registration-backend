@@ -3,10 +3,15 @@ package com.regbackend.registrationbackend.services;
 import com.regbackend.registrationbackend.entity.RegistrationEntity;
 import com.regbackend.registrationbackend.enums.EventType;
 import com.regbackend.registrationbackend.enums.Status;
+import com.regbackend.registrationbackend.model.RegistrationFilterModel;
 import com.regbackend.registrationbackend.model.RegistrationModel;
 import com.regbackend.registrationbackend.model.RegistrationStatsModel;
 import com.regbackend.registrationbackend.repository.RegistrationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -58,9 +63,52 @@ public class RegistrationServiceImp implements RegistrationService {
     }
 
     @Override
-    public List<RegistrationEntity> getByFilters(String status, String name, String eventType, String gender, String registeredAs, String cnic, int pageNumber, int pageSize) {
-        return List.of();
+    public RegistrationFilterModel getByFilters(
+            String status,
+            String name,
+            String eventType,
+            String gender,
+            String registeredAs,
+            String cnic,
+            int pageNumber,
+            int pageSize
+    ) {
+        // pageNumber should start from 1 for users, but PageRequest is 0-indexed
+        if (pageNumber < 1) pageNumber = 1;
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+
+        Specification<RegistrationEntity> spec = Specification.where(null);
+
+        if (status != null && !status.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), Status.valueOf(status.toUpperCase())));
+        }
+        if (name != null && !name.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("fullName")), "%" + name.toLowerCase() + "%"));
+        }
+        if (eventType != null && !eventType.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("eventType"), EventType.valueOf(eventType.toUpperCase())));
+        }
+        if (gender != null && !gender.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("gender")), gender.toLowerCase()));
+        }
+        if (registeredAs != null && !registeredAs.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(cb.lower(root.get("registeredAs")), registeredAs.toLowerCase()));
+        }
+        if (cnic != null && !cnic.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("cnic"), cnic));
+        }
+
+        Page<RegistrationEntity> pageResult = registrationRepository.findAll(spec, pageable);
+
+        RegistrationFilterModel filterModel = new RegistrationFilterModel();
+        filterModel.setRegistrations(pageResult.getContent());
+        filterModel.setPageNumber(pageNumber);
+        filterModel.setTotalPages(pageResult.getTotalPages());
+        filterModel.setTotalRegistrations(pageResult.getTotalElements());
+
+        return filterModel;
     }
+
 
     @Override
     public RegistrationEntity getRegistrationById(Long id) {

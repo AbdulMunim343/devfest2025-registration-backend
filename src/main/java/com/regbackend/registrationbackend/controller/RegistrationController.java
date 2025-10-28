@@ -74,14 +74,20 @@ public class RegistrationController {
             @RequestParam(required = false) String by_gender,
             @RequestParam(required = false) String by_registered_as,
             @RequestParam(required = false) String by_cnic,
-            @RequestParam(defaultValue = "0") int pageNumber,
+            @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
-        RegistrationFilterModel result = (RegistrationFilterModel) registrationService.getByFilters(
+        RegistrationFilterModel result = registrationService.getByFilters(
                 by_status, by_name, by_eventtype, by_gender, by_registered_as, by_cnic, pageNumber, pageSize
         );
+
+        if (result.getRegistrations().isEmpty()) {
+            return ResponseEntity.ok(new APIModel<>(404, "Data not found", result));
+        }
+
         return ResponseEntity.ok(new APIModel<>(200, "Filtered data fetched successfully", result));
     }
+
 
     // ✅ Stats
     @GetMapping("/stats")

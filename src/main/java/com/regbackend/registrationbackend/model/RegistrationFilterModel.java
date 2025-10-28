@@ -13,9 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class RegistrationFilterModel {
+    // Getters and Setters
     private List<RegistrationEntity> registrations;
     private int pageNumber;
     private int totalPages;
     private long totalRegistrations;
+
 }
+
 
