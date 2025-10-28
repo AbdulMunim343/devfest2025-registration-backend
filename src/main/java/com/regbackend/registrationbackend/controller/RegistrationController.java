@@ -95,4 +95,16 @@ public class RegistrationController {
         RegistrationStatsModel stats = registrationService.getRegistrationStats();
         return ResponseEntity.ok(new APIModel<>(200, "Statistics fetched successfully", stats));
     }
+
+    @PutMapping("/update-status")
+    public ResponseEntity<APIModel<String>> updateStatusBulk(@RequestBody BulkStatusUpdateModel model) {
+        try {
+            registrationService.updateStatuses(model.getIds(), model.getStatus());
+            return ResponseEntity.ok(new APIModel<>(200, "Statuses updated successfully", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new APIModel<>(500, "Error updating statuses: " + e.getMessage(), null));
+        }
+    }
+
 }

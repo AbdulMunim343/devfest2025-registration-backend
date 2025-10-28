@@ -161,4 +161,25 @@ public class RegistrationServiceImp implements RegistrationService {
     public void deleteRegistration(Long id) {
         registrationRepository.deleteById(id);
     }
+
+    @Override
+    public void updateStatuses(List<Long> ids, String status) {
+        if (ids == null || ids.isEmpty()) {
+            throw new IllegalArgumentException("At least one ID must be provided");
+        }
+
+        Status newStatus;
+        try {
+            newStatus = Status.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
+
+        List<RegistrationEntity> registrations = registrationRepository.findAllById(ids);
+        for (RegistrationEntity reg : registrations) {
+            reg.setStatus(newStatus);
+        }
+        registrationRepository.saveAll(registrations);
+    }
+
 }

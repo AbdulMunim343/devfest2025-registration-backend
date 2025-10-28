@@ -25,4 +25,5 @@ public interface RegistrationService {
     RegistrationEntity updateRegistration(Long id, RegistrationModel registrationModel);
     RegistrationStatsModel getRegistrationStats();
     void deleteRegistration(Long id);
+    void updateStatuses(List<Long> ids, String status);
 }
