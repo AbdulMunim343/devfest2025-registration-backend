@@ -23,6 +23,9 @@ public class RegistrationServiceImp implements RegistrationService {
     @Autowired
     private RegistrationRepository registrationRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     public RegistrationEntity registerUser(RegistrationModel registrationModel) {
 
@@ -162,7 +165,6 @@ public class RegistrationServiceImp implements RegistrationService {
         registrationRepository.deleteById(id);
     }
 
-    @Override
     public void updateStatuses(List<Long> ids, String status) {
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("At least one ID must be provided");
@@ -176,9 +178,21 @@ public class RegistrationServiceImp implements RegistrationService {
         }
 
         List<RegistrationEntity> registrations = registrationRepository.findAllById(ids);
+
         for (RegistrationEntity reg : registrations) {
             reg.setStatus(newStatus);
+
+            // ✅ Send email if status is APPROVED
+            if (newStatus == Status.APPROVED) {
+                emailService.sendApprovalEmail(
+                        reg.getEmail(),
+                        reg.getFullName(),
+                        reg.getCnic(),
+                        reg.getEventType().name()
+                );
+            }
         }
+
         registrationRepository.saveAll(registrations);
     }
 
