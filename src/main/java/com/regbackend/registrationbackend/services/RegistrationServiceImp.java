@@ -184,16 +184,30 @@ public class RegistrationServiceImp implements RegistrationService {
 
             // ✅ Send email if status is APPROVED
             if (newStatus == Status.APPROVED) {
-                emailService.sendApprovalEmail(
-                        reg.getEmail(),
-                        reg.getFullName(),
-                        reg.getCnic(),
-                        reg.getEventType().name()
-                );
+//                emailService.sendApprovalEmail(
+//                        reg.getEmail(),
+//                        reg.getFullName(),
+//                        reg.getCnic(),
+//                        reg.getEventType().name()
+//                );
             }
         }
 
         registrationRepository.saveAll(registrations);
     }
+
+    @Override
+    public RegistrationEntity updateStatusById(Long id, String status) {
+        RegistrationEntity registration = registrationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+
+        try {
+            registration.setStatus(Status.valueOf(status.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid status: " + status);
+        }
+        return registrationRepository.save(registration);
+    }
+
 
 }

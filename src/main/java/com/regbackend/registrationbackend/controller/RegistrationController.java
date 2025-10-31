@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/registrations")
@@ -106,5 +109,31 @@ public class RegistrationController {
                     .body(new APIModel<>(500, "Error updating statuses: " + e.getMessage(), null));
         }
     }
+
+
+    @PostMapping("/scanQR")
+    public ResponseEntity<APIModel<Map<String, Object>>> scanQRAndUpdateStatus(
+            @RequestBody Map<String, Object> requestBody
+    ) {
+        try {
+            Long id = Long.valueOf(requestBody.get("id").toString());
+            String status = requestBody.get("status").toString();
+
+            RegistrationEntity updatedUser = registrationService.updateStatusById(id, status);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("name", updatedUser.getFullName());
+            response.put("cnic", updatedUser.getCnic());
+            response.put("status", updatedUser.getStatus());
+
+            return ResponseEntity.ok(new APIModel<>(200, "Status updated successfully", response));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new APIModel<>(500, "Error updating status: " + e.getMessage(), null));
+        }
+    }
+
+
 
 }
