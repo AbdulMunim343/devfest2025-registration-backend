@@ -6,6 +6,7 @@ import com.regbackend.registrationbackend.entity.RegistrationEntity;
 import com.regbackend.registrationbackend.model.RegistrationStatsModel;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RegistrationService {
     RegistrationEntity registerUser(RegistrationModel registrationModel);
@@ -26,5 +27,5 @@ public interface RegistrationService {
     RegistrationStatsModel getRegistrationStats();
     void deleteRegistration(Long id);
     void updateStatuses(List<Long> ids, String status);
-    RegistrationEntity updateStatusById(Long id, String status);
+    Map<String, Object> scanQRAndUpdateStatus(Long id, String status);
 }

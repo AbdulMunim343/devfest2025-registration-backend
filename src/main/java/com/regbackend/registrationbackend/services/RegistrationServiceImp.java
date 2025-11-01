@@ -15,7 +15,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RegistrationServiceImp implements RegistrationService {
@@ -197,17 +199,41 @@ public class RegistrationServiceImp implements RegistrationService {
     }
 
     @Override
-    public RegistrationEntity updateStatusById(Long id, String status) {
+    public Map<String, Object> scanQRAndUpdateStatus(Long id, String status) {
         RegistrationEntity registration = registrationRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("name", registration.getFullName());
+        response.put("cnic", registration.getCnic());
+        response.put("eventType", registration.getEventType());
+
+        // Convert and validate the status
+        Status newStatus;
         try {
-            registration.setStatus(Status.valueOf(status.toUpperCase()));
+            newStatus = Status.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid status: " + status);
         }
-        return registrationRepository.save(registration);
+
+        // Check if already updated
+        if (registration.getStatus() == newStatus) {
+            response.put("status", registration.getStatus());
+            response.put("message", "This person is already marked as " + newStatus);
+            return response;
+        }
+
+        // Update the status
+        registration.setStatus(newStatus);
+        registrationRepository.save(registration);
+
+        response.put("status", registration.getStatus());
+        response.put("message", "Status updated successfully");
+
+        return response;
     }
+
+
 
 
 }
