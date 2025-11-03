@@ -40,7 +40,7 @@ public class RegistrationModel {
 
     private Status status;
 
-    private String reason; // 🔹 Added (was null in DB)
+    private String ambassador; // 🔹 Added (was null in DB)
 
     private String createdAt;
 }

@@ -18,6 +18,9 @@ public interface RegistrationService {
             String gender,
             String registeredAs,
             String cnic,
+            String organizationOrUniversity,
+            String phoneNumber,
+            String ambassador,
             int pageNumber,
             int pageSize
     );

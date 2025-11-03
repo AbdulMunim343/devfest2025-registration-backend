@@ -1,7 +1,8 @@
 package com.regbackend.registrationbackend.enums;
 public enum Status {
     PENDING,
-    APPROVED,
+    SHORTLISTED,
     REJECTED,
-    ATTENDED
+    ATTENDED,
+    CONFIRMED
 }

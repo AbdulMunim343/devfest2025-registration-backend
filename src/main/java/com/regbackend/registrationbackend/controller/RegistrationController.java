@@ -71,17 +71,20 @@ public class RegistrationController {
     // ✅ Filtered results
     @GetMapping("/filter")
     public ResponseEntity<APIModel<RegistrationFilterModel>> getByFilters(
-            @RequestParam(required = false) String by_status,
-            @RequestParam(required = false) String by_name,
-            @RequestParam(required = false) String by_eventtype,
-            @RequestParam(required = false) String by_gender,
-            @RequestParam(required = false) String by_registered_as,
-            @RequestParam(required = false) String by_cnic,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String eventtype,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String registered_as,
+            @RequestParam(required = false) String cnic,
+            @RequestParam(required = false) String organizationOrUniversity,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String ambassador,
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         RegistrationFilterModel result = registrationService.getByFilters(
-                by_status, by_name, by_eventtype, by_gender, by_registered_as, by_cnic, pageNumber, pageSize
+                status, name, eventtype, gender, registered_as, cnic, organizationOrUniversity,phoneNumber, ambassador, pageNumber, pageSize
         );
 
         if (result.getRegistrations().isEmpty()) {

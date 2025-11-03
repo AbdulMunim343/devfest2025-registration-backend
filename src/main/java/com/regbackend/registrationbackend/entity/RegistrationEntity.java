@@ -57,7 +57,7 @@ public class RegistrationEntity {
     @Column(nullable = false)
     private Status status = Status.PENDING;
     private String gender;
-    private String reason;
+    private String ambassador;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();

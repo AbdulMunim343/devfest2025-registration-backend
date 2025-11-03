@@ -55,7 +55,7 @@ public class RegistrationServiceImp implements RegistrationService {
                 .workshopName(registrationModel.getSelectedWorkshop())
                 .status(Status.PENDING)
                 .gender(registrationModel.getGender())
-                .reason(registrationModel.getReason())
+                .ambassador(registrationModel.getAmbassador())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -75,6 +75,9 @@ public class RegistrationServiceImp implements RegistrationService {
             String gender,
             String registeredAs,
             String cnic,
+            String organizationOrUniversity,
+            String phoneNumber,
+            String ambassador,
             int pageNumber,
             int pageSize
     ) {
@@ -101,6 +104,18 @@ public class RegistrationServiceImp implements RegistrationService {
         }
         if (cnic != null && !cnic.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("cnic"), cnic));
+        }
+
+        if (organizationOrUniversity != null && !organizationOrUniversity.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("organizationOrUniversity"), organizationOrUniversity));
+        }
+
+        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("phoneNumber"), phoneNumber));
+        }
+
+        if (ambassador != null && !ambassador.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("ambassador"), ambassador));
         }
 
         Page<RegistrationEntity> pageResult = registrationRepository.findAll(spec, pageable);
@@ -150,8 +165,9 @@ public class RegistrationServiceImp implements RegistrationService {
 
         stats.setPendingRegistrations(registrationRepository.countByStatus(Status.PENDING));
         stats.setRejectedRegistrations(registrationRepository.countByStatus(Status.REJECTED));
-        stats.setApprovedRegistrations(registrationRepository.countByStatus(Status.APPROVED));
+        stats.setApprovedRegistrations(registrationRepository.countByStatus(Status.SHORTLISTED));
         stats.setAttendedRegistrations(registrationRepository.countByStatus(Status.ATTENDED));
+        stats.setAttendedRegistrations(registrationRepository.countByStatus(Status.CONFIRMED));
 
         stats.setProfessionalCount(registrationRepository.countByRegisteredAs("professional"));
         stats.setStudentCount(registrationRepository.countByRegisteredAs("student"));
@@ -185,7 +201,7 @@ public class RegistrationServiceImp implements RegistrationService {
             reg.setStatus(newStatus);
 
             // ✅ Send email if status is APPROVED
-            if (newStatus == Status.APPROVED) {
+            if (newStatus == Status.SHORTLISTED) {
 //                emailService.sendApprovalEmail(
 //                        reg.getEmail(),
 //                        reg.getFullName(),
