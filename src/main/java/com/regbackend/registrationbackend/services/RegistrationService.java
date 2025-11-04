@@ -25,10 +25,10 @@ public interface RegistrationService {
             int pageSize
     );
 
-    RegistrationEntity getRegistrationById(Long id);
-    RegistrationEntity updateRegistration(Long id, RegistrationModel registrationModel);
+    RegistrationEntity getRegistrationById(String id);
+    RegistrationEntity updateRegistration(String id, RegistrationModel registrationModel);
     RegistrationStatsModel getRegistrationStats();
-    void deleteRegistration(Long id);
-    void updateStatuses(List<Long> ids, String status);
-    Map<String, Object> scanQRAndUpdateStatus(Long id, String status);
+    void deleteRegistration(String id);
+    void updateStatuses(List<String> ids, String status);
+    Map<String, Object> scanQRAndUpdateStatus(String id, String status);
 }

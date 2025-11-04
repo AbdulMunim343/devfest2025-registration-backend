@@ -48,7 +48,7 @@ public class RegistrationController {
 
     // ✅ Get by ID
     @GetMapping("/{id}")
-    public ResponseEntity<APIModel<RegistrationEntity>> getRegistrationById(@PathVariable Long id) {
+    public ResponseEntity<APIModel<RegistrationEntity>> getRegistrationById(@PathVariable String id) {
         RegistrationEntity registration = registrationService.getRegistrationById(id);
         if (registration == null) throw new ResourceNotFoundException("Registration not found with ID: " + id);
         return ResponseEntity.ok(new APIModel<>(200, "Registration fetched successfully", registration));
@@ -56,14 +56,14 @@ public class RegistrationController {
 
     // ✅ Update registration
     @PutMapping("/{id}")
-    public ResponseEntity<APIModel<RegistrationEntity>> updateRegistration(@PathVariable Long id, @RequestBody RegistrationModel registrationModel) {
+    public ResponseEntity<APIModel<RegistrationEntity>> updateRegistration(@PathVariable String id, @RequestBody RegistrationModel registrationModel) {
         RegistrationEntity updated = registrationService.updateRegistration(id, registrationModel);
         return ResponseEntity.ok(new APIModel<>(200, "Registration updated successfully", updated));
     }
 
     // ✅ Delete registration
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIModel<String>> deleteRegistration(@PathVariable Long id) {
+    public ResponseEntity<APIModel<String>> deleteRegistration(@PathVariable String id) {
         registrationService.deleteRegistration(id);
         return ResponseEntity.ok(new APIModel<>(200, "Registration deleted successfully", null));
     }
@@ -119,12 +119,14 @@ public class RegistrationController {
             @RequestBody Map<String, Object> requestBody
     ) {
         try {
-            Long id = Long.valueOf(requestBody.get("id").toString());
+            String publicId = requestBody.get("publicId").toString(); // ✅ now using publicId
             String status = requestBody.get("status").toString();
 
-            Map<String, Object> response = registrationService.scanQRAndUpdateStatus(id, status);
+            Map<String, Object> response = registrationService.scanQRAndUpdateStatus(publicId, status);
 
-            return ResponseEntity.ok(new APIModel<>(200, response.get("message").toString(), response));
+            return ResponseEntity.ok(
+                    new APIModel<>(200, response.get("message").toString(), response)
+            );
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

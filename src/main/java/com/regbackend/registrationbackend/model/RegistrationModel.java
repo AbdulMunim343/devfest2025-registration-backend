@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RegistrationModel {
 
-    private Long id;
+    private String id;
+
+    private String publicId;
 
     private String fullName;
 

@@ -41,7 +41,7 @@ public class RegistrationServiceImp implements RegistrationService {
             throw new IllegalArgumentException("Email already exists. Please use a different email.");
         }
 
-        // ✅ Build and save new entity
+        // ✅ Build new registration entity (UUID and publicId will be auto-generated)
         RegistrationEntity entity = RegistrationEntity.builder()
                 .fullName(registrationModel.getFullName())
                 .email(registrationModel.getEmail())
@@ -59,8 +59,13 @@ public class RegistrationServiceImp implements RegistrationService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return registrationRepository.save(entity);
+        // ✅ Save entity (triggers @PrePersist to auto-generate UUID + publicId)
+        RegistrationEntity savedEntity = registrationRepository.save(entity);
+
+        // ✅ Return the saved entity with UUID + publicId
+        return savedEntity;
     }
+
 
     @Override
     public List<RegistrationEntity> getAllRegistrations() {
@@ -131,13 +136,13 @@ public class RegistrationServiceImp implements RegistrationService {
 
 
     @Override
-    public RegistrationEntity getRegistrationById(Long id) {
+    public RegistrationEntity getRegistrationById(String id) {
         return registrationRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Registration not found with ID: " + id));
     }
 
     @Override
-    public RegistrationEntity updateRegistration(Long id, RegistrationModel model) {
+    public RegistrationEntity updateRegistration(String id, RegistrationModel model) {
         RegistrationEntity entity = getRegistrationById(id);
 
         entity.setFullName(model.getFullName());
@@ -179,11 +184,11 @@ public class RegistrationServiceImp implements RegistrationService {
     }
 
     @Override
-    public void deleteRegistration(Long id) {
+    public void deleteRegistration(String id) {
         registrationRepository.deleteById(id);
     }
 
-    public void updateStatuses(List<Long> ids, String status) {
+    public void updateStatuses(List<String> ids, String status) {
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("At least one ID must be provided");
         }
@@ -214,17 +219,18 @@ public class RegistrationServiceImp implements RegistrationService {
         registrationRepository.saveAll(registrations);
     }
 
+
     @Override
-    public Map<String, Object> scanQRAndUpdateStatus(Long id, String status) {
-        RegistrationEntity registration = registrationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
+    public Map<String, Object> scanQRAndUpdateStatus(String publicId, String status) {
+        RegistrationEntity registration = registrationRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new RuntimeException("User not found with Public ID: " + publicId));
 
         Map<String, Object> response = new HashMap<>();
         response.put("name", registration.getFullName());
         response.put("cnic", registration.getCnic());
         response.put("eventType", registration.getEventType());
 
-        // Convert and validate the status
+        // ✅ Convert and validate status
         Status newStatus;
         try {
             newStatus = Status.valueOf(status.toUpperCase());
@@ -232,14 +238,14 @@ public class RegistrationServiceImp implements RegistrationService {
             throw new RuntimeException("Invalid status: " + status);
         }
 
-        // Check if already updated
+        // ✅ Check if already updated
         if (registration.getStatus() == newStatus) {
             response.put("status", registration.getStatus());
             response.put("message", "This person is already marked as " + newStatus);
             return response;
         }
 
-        // Update the status
+        // ✅ Update and save
         registration.setStatus(newStatus);
         registrationRepository.save(registration);
 
@@ -248,6 +254,7 @@ public class RegistrationServiceImp implements RegistrationService {
 
         return response;
     }
+
 
 
 

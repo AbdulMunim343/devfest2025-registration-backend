@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RegistrationRepository extends JpaRepository<RegistrationEntity, Long>, JpaSpecificationExecutor<RegistrationEntity> {
-
+public interface RegistrationRepository extends JpaRepository<RegistrationEntity, String> , JpaSpecificationExecutor<RegistrationEntity> {
+    Optional<RegistrationEntity> findByPublicId(String publicId);
     Optional<RegistrationEntity> findByEmail(String email);
 
     Optional<RegistrationEntity> findByCnic(String cnic);
