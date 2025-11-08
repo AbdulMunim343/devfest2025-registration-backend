@@ -13,7 +13,8 @@ public class RegistrationStatsModel {
     private long totalConferenceRegistrations;
     private long pendingRegistrations;
     private long rejectedRegistrations;
-    private long approvedRegistrations;
+    private long shortlistedRegistrations;
+    private long confirmedRegistrations;
     private long attendedRegistrations;
     private long professionalCount;
     private long studentCount;

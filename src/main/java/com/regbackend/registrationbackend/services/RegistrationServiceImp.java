@@ -170,9 +170,9 @@ public class RegistrationServiceImp implements RegistrationService {
 
         stats.setPendingRegistrations(registrationRepository.countByStatus(Status.PENDING));
         stats.setRejectedRegistrations(registrationRepository.countByStatus(Status.REJECTED));
-        stats.setApprovedRegistrations(registrationRepository.countByStatus(Status.SHORTLISTED));
+        stats.setShortlistedRegistrations(registrationRepository.countByStatus(Status.SHORTLISTED));
         stats.setAttendedRegistrations(registrationRepository.countByStatus(Status.ATTENDED));
-        stats.setAttendedRegistrations(registrationRepository.countByStatus(Status.CONFIRMED));
+        stats.setConfirmedRegistrations(registrationRepository.countByStatus(Status.CONFIRMED));
 
         stats.setProfessionalCount(registrationRepository.countByRegisteredAs("professional"));
         stats.setStudentCount(registrationRepository.countByRegisteredAs("student"));
@@ -229,6 +229,9 @@ public class RegistrationServiceImp implements RegistrationService {
         response.put("name", registration.getFullName());
         response.put("cnic", registration.getCnic());
         response.put("eventType", registration.getEventType());
+        if(registration.getEventType() == EventType.WORKSHOP) {
+            response.put("workshopName", registration.getWorkshopName());
+        }
 
         // ✅ Convert and validate status
         Status newStatus;
