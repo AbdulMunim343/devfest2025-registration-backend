@@ -207,12 +207,12 @@ public class RegistrationServiceImp implements RegistrationService {
 
             // ✅ Send email if status is APPROVED
             if (newStatus == Status.SHORTLISTED) {
-//                emailService.sendApprovalEmail(
-//                        reg.getEmail(),
-//                        reg.getFullName(),
-//                        reg.getCnic(),
-//                        reg.getEventType().name()
-//                );
+                emailService.sendApprovalEmail(
+                        reg.getEmail(),
+                        reg.getFullName(),
+                        reg.getCnic(),
+                        reg.getEventType().name()
+                );
             }
         }
 
