@@ -189,6 +189,7 @@ public class RegistrationServiceImp implements RegistrationService {
     }
 
     public void updateStatuses(List<String> ids, String status) {
+
         if (ids == null || ids.isEmpty()) {
             throw new IllegalArgumentException("At least one ID must be provided");
         }
@@ -203,10 +204,21 @@ public class RegistrationServiceImp implements RegistrationService {
         List<RegistrationEntity> registrations = registrationRepository.findAllById(ids);
 
         for (RegistrationEntity reg : registrations) {
-            reg.setStatus(newStatus);
 
-            // ✅ Send email if status is APPROVED
-            if (newStatus == Status.SHORTLISTED) {
+            Status previousStatus = reg.getStatus();   // ✅ Check old status
+            reg.setStatus(newStatus);                 // Update new status
+
+            // -------------------------------------------------------
+            //  If user is already SHORTLISTED → do NOT resend email
+            // -------------------------------------------------------
+            if (newStatus == Status.SHORTLISTED && previousStatus != Status.SHORTLISTED) {
+
+                // Ensure publicId is NOT null
+                if (reg.getPublicId() == null || reg.getPublicId().isEmpty()) {
+                    throw new RuntimeException("Public ID is missing for user: " + reg.getEmail());
+                }
+
+                // Send email only ONCE
                 emailService.sendApprovalEmail(
                         reg.getEmail(),
                         reg.getFullName(),
@@ -219,6 +231,7 @@ public class RegistrationServiceImp implements RegistrationService {
 
         registrationRepository.saveAll(registrations);
     }
+
 
 
     @Override
