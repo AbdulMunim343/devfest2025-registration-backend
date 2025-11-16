@@ -221,7 +221,8 @@ public class RegistrationServiceImp implements RegistrationService {
                         reg.getFullName(),
                         reg.getCnic(),
                         reg.getEventType().toString(),
-                        reg.getPublicId()
+                        reg.getPublicId(),
+                        reg.getWorkshopName()
                 );
             }
         }
