@@ -205,12 +205,9 @@ public class RegistrationServiceImp implements RegistrationService {
 
         for (RegistrationEntity reg : registrations) {
 
-            Status previousStatus = reg.getStatus();   // ✅ Check old status
-            reg.setStatus(newStatus);                 // Update new status
+            Status previousStatus = reg.getStatus();
+            reg.setStatus(newStatus);
 
-            // -------------------------------------------------------
-            //  If user is already SHORTLISTED → do NOT resend email
-            // -------------------------------------------------------
             if (newStatus == Status.SHORTLISTED && previousStatus != Status.SHORTLISTED) {
 
                 // Ensure publicId is NOT null
