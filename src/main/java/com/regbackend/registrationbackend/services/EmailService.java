@@ -40,7 +40,7 @@ public class EmailService {
         String qrCodeUrl = generateQRCodeUrl(publicId);
 
         // Use the URL directly in the img tag
-        String qrImgTag = "<img src=\"" + qrCodeUrl + "\" width=\"220\" height=\"220\" style=\"display:block;margin:20px auto;\" />";
+        String qrImgTag = "<img src=\"" + qrCodeUrl + "\" width=\"160\" height=\"160\" style=\"display:block;margin:20px auto;border:1px solid #000000;padding:10px;background:white;\" />";
 
         // Check if event type is WORKSHOP
         boolean isWorkshop = "WORKSHOP".equalsIgnoreCase(eventType);
@@ -48,53 +48,55 @@ public class EmailService {
         // Build workshop row if applicable
         String workshopRow = "";
         if (isWorkshop && workshopName != null && !workshopName.isEmpty()) {
-            workshopRow = "<tr><td><b>Workshop:</b></td><td>" + workshopName + "</td></tr>";
+            workshopRow = "<tr><td><b>Workshop:</b></td><td><b>" + workshopName + "</b></td></tr>";
         }
 
         // Build workshop instruction if applicable
         String workshopInstruction = "";
         if (isWorkshop) {
-            workshopInstruction = "<li>For the workshop please bring your laptop and internet devices or hotspot</li>";
+            workshopInstruction = "<li><b>For the workshop please bring your laptop and internet devices or hotspot</b></li>";
         }
 
         // HTML template
         String htmlTemplate =
                 "<html>" +
-                        "<body style=\"font-family:Arial, sans-serif; background:#ffffff; padding:20px;\">" +
-                        "  <div style=\"max-width:600px; margin:auto; background:white; padding:25px; border-radius:10px;\">" +
+                        "<body style=\"font-family:'Google Sans', Arial, sans-serif; background:#f8f9fa; font-weight:bold;\">" +
+                        "  <div style=\"max-width:600px; margin:auto; background:white; padding:20px; border-radius:10px; background-image:url('https://i.postimg.cc/dtgZsGQk/Grid.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat;\">" +
 
                         "    <div style=\"text-align:center; margin-bottom:20px;\">" +
-                        "      <img src=\"https://i.postimg.cc/44LkwJF3/Group-1306.png\" alt=\"Devfest Logo\" style=\"max-width:100%; height:auto;\" />" +
+                        "      <img src=\"https://i.postimg.cc/44LkwJF3/Group-1306.png\" alt=\"Devfest Logo\" style=\"width:150px;\" />" +
                         "    </div>" +
 
-                        "    <h2 style=\"color:#2563eb; text-align:center;\">Congratulations, " + fullName + "!</h2>" +
-                        "    <p style=\"text-align:center;\">Your registration has been <b style='color:green;'>approved</b>.</p>" +
+                        "    <h2 style=\"color:#4285f4; text-align:center; font-weight:bold;\"><b>Congratulations, " + fullName + "!</b></h2>" +
+                        "    <p style=\"text-align:center; color:#4285f4; font-weight:bold;\"><b>Your registration has been <span style='color:#0f9d58;'>approved</span>.</b></p>" +
 
                         "    <div style=\"text-align:center; margin-top:20px;\">" +
-                        "      <h3 style=\"margin-bottom:10px;\">🎟 Your Entry QR Code</h3>" +
+                        "      <h3 style=\"margin-bottom:10px; color:#4285f4; font-weight:bold;\"><b>🎟 Your Entry QR Code</b></h3>" +
                         qrImgTag +
                         "    </div>" +
 
-                        "    <table style=\"width:100%; margin-top:20px;\">" +
-                        "      <tr><td><b>CNIC:</b></td><td>" + cnic + "</td></tr>" +
-                        "      <tr><td><b>Event Type:</b></td><td>" + eventType + "</td></tr>" +
+                        "    <div style=\"background:white; border:2px solid rgba(0,0,0,0.2); border-radius:10px; padding:15px; margin:20px auto; width:250px;\">" +
+                        "      <table style=\"width:250px; color:#4285f4; font-weight:bold;\">" +
+                        "        <tr><td><b>CNIC:</b></td><td><b>" + cnic + "</b></td></tr>" +
+                        "        <tr><td><b>Event Type:</b></td><td><b>" + eventType + "</b></td></tr>" +
                         workshopRow +
-                        "    </table>" +
+                        "      </table>" +
+                        "    </div>" +
 
-                        "    <div style=\"margin-top:20px; background:#f3f4f6; padding:15px; border-radius:8px;\">" +
-                        "      <h4 style=\"margin-top:0; color:#1f2937;\">Important Instructions:</h4>" +
-                        "      <ul style=\"margin-left:10px; color:#374151;\">" +
-                        "        <li>Bring this ticket and CNIC for verification</li>" +
-                        "        <li>Arrive sharp at 8:30 AM</li>" +
-                        "        <li>Entry won't be allowed after 10:00 AM</li>" +
+                        "    <div style=\"background:white; border:2px solid rgba(0,0,0,0.2); border-radius:10px; padding:15px; margin:20px auto; width:250px;\">" +
+                        "      <h4 style=\"margin-top:0; color:#ea4335; font-weight:bold;\"><b>Important Instructions:</b></h4>" +
+                        "      <ul style=\"color:#4285f4; font-weight:bold;\">" +
+                        "        <li><b>Bring this ticket and CNIC for verification</b></li>" +
+                        "        <li><b>Arrive sharp at 8:30 AM</b></li>" +
+                        "        <li><b>Entry won't be allowed after 11:00 AM</b></li>" +
                         workshopInstruction +
                         "      </ul>" +
                         "    </div>" +
 
-                        "    <p style=\"margin-top:20px;\">We look forward to seeing you!<br/><br/>" +
-                        "    Best Regards,<br/><b>GDG Kolachi Team</b></p>" +
+                        "    <p style=\"margin-top:20px; color:#4285f4; font-weight:bold;\"><b>We look forward to seeing you!</b><br/><br/>" +
+                        "    <b>For more details, visit: <a href=\"http://devfest.gdgkolachi.com\" style=\"color:#0f9d58; text-decoration:none;\">devfest.gdgkolachi.com</a></b></p>" +
 
-                        "    <div style=\"text-align:center; margin-top:30px; border-top:1px solid #e5e7eb; padding-top:20px;\">" +
+                        "    <div style=\"text-align:center; margin-top:10px;\">" +
                         "      <img src=\"https://i.postimg.cc/FKnmz3kx/GDG-LOGO.png\" alt=\"GDG Logo\" style=\"max-width:150px; height:auto;\" />" +
                         "    </div>" +
 
