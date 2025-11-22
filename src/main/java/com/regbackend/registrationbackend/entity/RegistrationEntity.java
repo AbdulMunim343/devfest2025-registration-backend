@@ -25,7 +25,7 @@ public class RegistrationEntity {
     @GeneratedValue(generator = "uuid2")
     @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false, unique = true, length = 36)
-    private String id = UUID.randomUUID().toString();; // example: "bda183f0-bd0a-4a78-bd79-0ecbf7c4e6ff"
+    private String id = UUID.randomUUID().toString(); // example: "bda183f0-bd0a-4a78-bd79-0ecbf7c4e6ff"
 
     // ===================== Public ID =====================
     @Column(unique = true, updatable = false)
@@ -72,8 +72,14 @@ public class RegistrationEntity {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // ===================== Helper Methods =====================
+    // ===================== New Fields =====================
+    @Column(nullable = true)
+    private Boolean allowDataUse = false;  // default false
 
+    @Column(nullable = true)
+    private String workshopExpectations;
+
+    // ===================== Helper Methods =====================
     @PrePersist
     public void generatePublicId() {
         if (this.publicId == null) {
@@ -82,8 +88,4 @@ public class RegistrationEntity {
             this.publicId = String.format("REG-%05d", Integer.parseInt(uniquePart));
         }
     }
-
-
-
 }
-

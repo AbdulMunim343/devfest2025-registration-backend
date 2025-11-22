@@ -56,6 +56,8 @@ public class RegistrationServiceImp implements RegistrationService {
                 .status(Status.PENDING)
                 .gender(registrationModel.getGender())
                 .ambassador(registrationModel.getAmbassador())
+                .allowDataUse(registrationModel.getAllowDataUse() != null ? registrationModel.getAllowDataUse() : false)  // default false if null
+                .workshopExpectations(registrationModel.getWorkshopExpectations())
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -83,6 +85,8 @@ public class RegistrationServiceImp implements RegistrationService {
             String organizationOrUniversity,
             String phoneNumber,
             String ambassador,
+            String email,
+            String workshopName,
             int pageNumber,
             int pageSize
     ) {
@@ -121,6 +125,14 @@ public class RegistrationServiceImp implements RegistrationService {
 
         if (ambassador != null && !ambassador.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("ambassador"), ambassador));
+        }
+
+        if (email != null && !email.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("email"), email));
+        }
+
+        if (workshopName != null && !workshopName.isEmpty()) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("workshopName"), workshopName));
         }
 
         Page<RegistrationEntity> pageResult = registrationRepository.findAll(spec, pageable);

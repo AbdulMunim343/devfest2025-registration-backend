@@ -80,11 +80,13 @@ public class RegistrationController {
             @RequestParam(required = false) String organizationOrUniversity,
             @RequestParam(required = false) String phoneNumber,
             @RequestParam(required = false) String ambassador,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String workshopName,
             @RequestParam(defaultValue = "1") int pageNumber,
             @RequestParam(defaultValue = "10") int pageSize
     ) {
         RegistrationFilterModel result = registrationService.getByFilters(
-                status, name, eventtype, gender, registered_as, cnic, organizationOrUniversity,phoneNumber, ambassador, pageNumber, pageSize
+                status, name, eventtype, gender, registered_as, cnic, organizationOrUniversity,phoneNumber, ambassador,email,workshopName, pageNumber, pageSize
         );
 
         if (result.getRegistrations().isEmpty()) {

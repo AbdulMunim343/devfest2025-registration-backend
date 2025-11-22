@@ -45,4 +45,9 @@ public class RegistrationModel {
     private String ambassador; // 🔹 Added (was null in DB)
 
     private String createdAt;
+
+    // ===================== New Fields =====================
+    private Boolean allowDataUse;
+
+    private String workshopExpectations;
 }

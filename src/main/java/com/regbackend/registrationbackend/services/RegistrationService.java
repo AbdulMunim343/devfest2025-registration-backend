@@ -21,6 +21,8 @@ public interface RegistrationService {
             String organizationOrUniversity,
             String phoneNumber,
             String ambassador,
+            String email,
+            String workshopName,
             int pageNumber,
             int pageSize
     );

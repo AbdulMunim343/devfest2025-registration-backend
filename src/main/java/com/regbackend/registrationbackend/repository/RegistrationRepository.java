@@ -13,27 +13,10 @@ import java.util.Optional;
 @Repository
 public interface RegistrationRepository extends JpaRepository<RegistrationEntity, String> , JpaSpecificationExecutor<RegistrationEntity> {
     Optional<RegistrationEntity> findByPublicId(String publicId);
-    Optional<RegistrationEntity> findByEmail(String email);
-
-    Optional<RegistrationEntity> findByCnic(String cnic);
-
-    List<RegistrationEntity> findByStatus(Status status);
-
-    List<RegistrationEntity> findByEventType(EventType eventType);
-
-    List<RegistrationEntity> findByRegisteredAs(String registeredAs);
-
-    List<RegistrationEntity> findByFullNameContainingIgnoreCase(String fullName);
-
     long countByEventType(EventType eventType);
-
     long countByStatus(Status status);
-
     long countByRegisteredAs(String registeredAs);
-
     long countByGender(String gender);
-
     boolean existsByCnic(String cnic);
-
     boolean existsByEmail(String email);
 }
