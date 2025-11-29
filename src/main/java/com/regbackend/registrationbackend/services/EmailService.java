@@ -32,7 +32,30 @@ public class EmailService {
         }
     }
 
-    public void sendApprovalEmail(String toEmail, String fullName, String cnic, String eventType, String publicId, String workshopName) {
+    // Extract workshop name from the value (before the pipe)
+    private String extractWorkshopName(String workshopValue) {
+        if (workshopValue == null || workshopValue.isEmpty()) {
+            return "";
+        }
+
+        String[] parts = workshopValue.split("\\|");
+        return parts[0].replace("-", " ").replace("&", " & ");
+    }
+
+    // Extract workshop time from the value (after the pipe)
+    private String extractWorkshopTime(String workshopValue) {
+        if (workshopValue == null || workshopValue.isEmpty()) {
+            return "";
+        }
+
+        String[] parts = workshopValue.split("\\|");
+        if (parts.length > 1) {
+            return parts[1];
+        }
+        return "";
+    }
+
+    public void sendApprovalEmail(String toEmail, String fullName, String cnic, String eventType, String publicId, String workshopValue) {
 
         Resend resend = new Resend(apiKey);
 
@@ -45,10 +68,19 @@ public class EmailService {
         // Check if event type is WORKSHOP
         boolean isWorkshop = "WORKSHOP".equalsIgnoreCase(eventType);
 
+        // Extract workshop name and time
+        String workshopName = extractWorkshopName(workshopValue);
+        String workshopTime = extractWorkshopTime(workshopValue);
+
         // Build workshop row if applicable
         String workshopRow = "";
         if (isWorkshop && workshopName != null && !workshopName.isEmpty()) {
             workshopRow = "<tr><td><b>Workshop:</b></td><td><b>" + workshopName + "</b></td></tr>";
+
+            // Add time row if time is available
+            if (workshopTime != null && !workshopTime.isEmpty()) {
+                workshopRow += "<tr><td><b>Time:</b></td><td><b>" + workshopTime + "</b></td></tr>";
+            }
         }
 
         // Build workshop instruction if applicable
