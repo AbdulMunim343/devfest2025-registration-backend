@@ -108,7 +108,7 @@ public class EmailService {
         CreateEmailOptions params = CreateEmailOptions.builder()
                 .from(fromName + " <" + fromEmail + ">")
                 .to(toEmail)
-                .subject("✅ Your Registration is Approved!")
+                .subject("Devfest calling. You're shortlisted.")
                 .html(htmlTemplate)
                 .build();
 
