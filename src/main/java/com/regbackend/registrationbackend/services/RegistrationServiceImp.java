@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -90,12 +91,17 @@ public class RegistrationServiceImp implements RegistrationService {
             int pageNumber,
             int pageSize
     ) {
-        // pageNumber should start from 1 for users, but PageRequest is 0-indexed
-        if (pageNumber < 1) pageNumber = 1;
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        // 1. Safety Check: Ensure pageNumber is at least 1
+        int validPage = (pageNumber < 1) ? 1 : pageNumber;
+
+        // 2. CRITICAL FIX: Add Sorting
+        // We sort by 'id' (or 'createdAt') to ensure the order is fixed.
+        // If you don't sort, the DB might return the same rows for Page 1 and Page 2.
+        Pageable pageable = PageRequest.of(validPage - 1, pageSize, Sort.by(Sort.Direction.DESC, "id"));
 
         Specification<RegistrationEntity> spec = Specification.where(null);
 
+        // ... (Your existing specification logic remains exactly the same) ...
         if (status != null && !status.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("status"), Status.valueOf(status.toUpperCase())));
         }
@@ -114,32 +120,29 @@ public class RegistrationServiceImp implements RegistrationService {
         if (cnic != null && !cnic.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("cnic"), cnic));
         }
-
         if (organizationOrUniversity != null && !organizationOrUniversity.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("organizationOrUniversity"), organizationOrUniversity));
         }
-
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("phoneNumber"), phoneNumber));
         }
-
         if (ambassador != null && !ambassador.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("ambassador"), ambassador));
         }
-
         if (email != null && !email.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("email"), email));
         }
-
         if (workshopName != null && !workshopName.isEmpty()) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("workshopName"), workshopName));
         }
 
+        // 3. Fetch Data
         Page<RegistrationEntity> pageResult = registrationRepository.findAll(spec, pageable);
 
+        // 4. Map Response
         RegistrationFilterModel filterModel = new RegistrationFilterModel();
         filterModel.setRegistrations(pageResult.getContent());
-        filterModel.setPageNumber(pageNumber);
+        filterModel.setPageNumber(validPage); // Return the sanitized page number
         filterModel.setTotalPages(pageResult.getTotalPages());
         filterModel.setTotalRegistrations(pageResult.getTotalElements());
 
