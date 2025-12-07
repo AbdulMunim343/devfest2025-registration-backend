@@ -1,6 +1,7 @@
 package com.regbackend.registrationbackend.config;
 
 import com.regbackend.registrationbackend.security.JwtAuthFilter;
+import com.regbackend.registrationbackend.security.RateLimitFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,9 @@ public class SecurityConfig {
     private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
+    private RateLimitFilter rateLimitFilter;
+
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @Bean
@@ -41,9 +45,6 @@ public class SecurityConfig {
                         // ✅ Public APIs (no auth)
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/registrations/register").permitAll()
-                        .requestMatchers("/api/registrations/scan-qr").permitAll()
-                        .requestMatchers("/api/registrations/stats").permitAll()
-                        .requestMatchers("/api/registrations/filter").permitAll()
 
                         // ✅ OPTIONS requests (preflight)
                         .requestMatchers("OPTIONS", "/**").permitAll()
@@ -51,7 +52,9 @@ public class SecurityConfig {
                         // ✅ everything else requires JWT
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
