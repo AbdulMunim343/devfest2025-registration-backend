@@ -15,7 +15,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.resend.services.emails.model.CreateEmailOptions;
+
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -218,6 +221,9 @@ public class RegistrationServiceImp implements RegistrationService {
 
         List<RegistrationEntity> registrations = registrationRepository.findAllById(ids);
 
+        // Collect all emails to send in batch
+        List<CreateEmailOptions> emailsToSend = new ArrayList<>();
+
         for (RegistrationEntity reg : registrations) {
 
             Status previousStatus = reg.getStatus();
@@ -230,8 +236,8 @@ public class RegistrationServiceImp implements RegistrationService {
                     throw new RuntimeException("Public ID is missing for user: " + reg.getEmail());
                 }
 
-                // Send email only ONCE
-                emailService.sendApprovalEmail(
+                // Build email options for batch sending
+                CreateEmailOptions emailOptions = emailService.buildApprovalEmailOptions(
                         reg.getEmail(),
                         reg.getFullName(),
                         reg.getCnic(),
@@ -239,7 +245,13 @@ public class RegistrationServiceImp implements RegistrationService {
                         reg.getPublicId(),
                         reg.getWorkshopName()
                 );
+                emailsToSend.add(emailOptions);
             }
+        }
+
+        // Send all emails in batch (handles chunking and rate limiting internally)
+        if (!emailsToSend.isEmpty()) {
+            emailService.sendBatchApprovalEmails(emailsToSend);
         }
 
         registrationRepository.saveAll(registrations);
