@@ -97,10 +97,10 @@ public class EmailService {
         String htmlTemplate =
                 "<html>" +
                         "<body style=\"font-family:'Google Sans', Arial, sans-serif; background:#f8f9fa; font-weight:bold;\">" +
-                        "  <div style=\"max-width:600px; margin:auto; background:white; padding:20px; border-radius:10px; background-image:url('https://i.postimg.cc/dtgZsGQk/Grid.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat;\">" +
+                        "  <div style=\"max-width:600px; margin:auto; background:white; padding:20px; border-radius:10px; background-image:url('https://storage.googleapis.com/gdg-kolachi-assets/grid.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat;\">" +
 
                         "    <div style=\"text-align:center; margin-bottom:20px;\">" +
-                        "      <img src=\"https://i.postimg.cc/44LkwJF3/Group-1306.png\" alt=\"Devfest Logo\" style=\"width:150px;\" />" +
+                        "      <img src=\"https://storage.googleapis.com/gdg-kolachi-assets/devfest_logo.png\" alt=\"Devfest Logo\" style=\"width:150px;\" />" +
                         "    </div>" +
 
                         "    <h2 style=\"color:#4285f4; text-align:center; font-weight:bold;\"><b>Congratulations, " + fullName + "!</b></h2>" +
@@ -133,7 +133,7 @@ public class EmailService {
                         "    <b>For more details, visit: <a href=\"http://devfest.gdgkolachi.com\" style=\"color:#0f9d58; text-decoration:none;\">devfest.gdgkolachi.com</a></b></p>" +
 
                         "    <div style=\"text-align:center; margin-top:10px;\">" +
-                        "      <img src=\"https://i.postimg.cc/FKnmz3kx/GDG-LOGO.png\" alt=\"GDG Logo\" style=\"max-width:150px; height:auto;\" />" +
+                        "      <img src=\"https://storage.googleapis.com/gdg-kolachi-assets/gdg_logo.png\" alt=\"GDG Logo\" style=\"max-width:150px; height:auto;\" />" +
                         "    </div>" +
 
                         "  </div>" +
@@ -184,9 +184,9 @@ public class EmailService {
         String htmlTemplate =
                 "<html>" +
                         "<body style=\"font-family:'Google Sans', Arial, sans-serif; background:#f8f9fa; font-weight:bold;\">" +
-                        "  <div style=\"max-width:600px; margin:auto; background:white; padding:20px; border-radius:10px; background-image:url('https://i.postimg.cc/dtgZsGQk/Grid.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat;\">" +
+                        "  <div style=\"max-width:600px; margin:auto; background:white; padding:20px; border-radius:10px; background-image:url('https://storage.googleapis.com/gdg-kolachi-assets/grid.jpg'); background-size:cover; background-position:center; background-repeat:no-repeat;\">" +
                         "    <div style=\"text-align:center; margin-bottom:20px;\">" +
-                        "      <img src=\"https://i.postimg.cc/44LkwJF3/Group-1306.png\" alt=\"Devfest Logo\" style=\"width:150px;\" />" +
+                        "      <img src=\"https://storage.googleapis.com/gdg-kolachi-assets/devfest_logo.png\" alt=\"Devfest Logo\" style=\"width:150px;\" />" +
                         "    </div>" +
                         "    <h2 style=\"color:#4285f4; text-align:center; font-weight:bold;\"><b>Congratulations, " + fullName + "!</b></h2>" +
                         "    <p style=\"text-align:center; color:#4285f4; font-weight:bold;\"><b>Your registration has been <span style='color:#0f9d58;'>approved</span>.</b></p>" +
@@ -213,7 +213,7 @@ public class EmailService {
                         "    <p style=\"margin-top:20px; color:#4285f4; font-weight:bold;\"><b>We look forward to seeing you!</b><br/><br/>" +
                         "    <b>For more details, visit: <a href=\"http://devfest.gdgkolachi.com\" style=\"color:#0f9d58; text-decoration:none;\">devfest.gdgkolachi.com</a></b></p>" +
                         "    <div style=\"text-align:center; margin-top:10px;\">" +
-                        "      <img src=\"https://i.postimg.cc/FKnmz3kx/GDG-LOGO.png\" alt=\"GDG Logo\" style=\"max-width:150px; height:auto;\" />" +
+                        "      <img src=\"https://storage.googleapis.com/gdg-kolachi-assets/gdg_logo.png\" alt=\"GDG Logo\" style=\"max-width:150px; height:auto;\" />" +
                         "    </div>" +
                         "  </div>" +
                         "</body>" +
