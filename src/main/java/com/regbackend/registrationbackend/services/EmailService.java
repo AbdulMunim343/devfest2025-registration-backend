@@ -222,6 +222,8 @@ public class EmailService {
         return CreateEmailOptions.builder()
                 .from(fromName + " <" + fromEmail + ">")
                 .to(toEmail)
+                .bcc("hassam@gdgkolachi.com")
+                .replyTo("hello@gdgkolachi.com")
                 .subject("Devfest calling. You're shortlisted.")
                 .html(htmlTemplate)
                 .build();
